@@ -27,18 +27,32 @@ try
     time  = str2double(datestr(now,'HHMMSS'));
     
     % Input variables
-    [fileNames, questions] = textread(strcat('stimuli/questions.txt'),'%20s %100s', 'delimiter','\t');
-    [subNo, currentTrial, finished] = textread(strcat('stimuli/questions.txt'),'%20s %100s', 'delimiter','\t');
+    [ratingType, fileNames, questions] = textread(strcat('stimuli/questions.txt'),'%10s %20s %100s', 'delimiter','\t');
+    [subNo, currentTrial, finished] = textread('log.txt','%n %n %n', 'delimiter','\t');
     if finished == 1
         error('You are already finished with the task. Please send me results.')
     end
-    nTrials = length(fileNames);
+    nTrials   = length(fileNames);
+    matrixDim = [21, nTrials/21];
+    index1    = [];
+    index2    = [];
+    for i = 1:nTrials
+        if ratingType == 'object'
+            index1 = fileNames{i};
+            index2 = 1;
+        else
+            splitStr = strsplit(fileNames{1}, '_');
+            index1 = splitStr{1};
+            index2 = splitStr{2};
+        end
+    end
     
     % Output variables
     if currentTrial > 1
     else
-        ratings = zeros(nTrial, 6) - 99;
-        RT      = zeros(nTrial, 6) - 99;
+        objectRatings   = zeros(matrixDim(1), 1) -999;
+        locationRatings = zeros(matrixDim(1), matrixDim(2)) - 999;
+        RT              = zeros(matrixDim(1), matrixDim(2)) - 999;
     end
     
 
