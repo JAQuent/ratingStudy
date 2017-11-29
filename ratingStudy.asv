@@ -34,8 +34,8 @@ try
         error('You are already finished with the task. Please send me results.')
     else
         fopen('log.txt', 'wt');
-        mSave        = strcat('data/ratingStudy',num2str(subNo),'.mat'); % name of another data file to write to (in .mat format)
-        mSaveALL     = strcat('data/ratingStudy',num2str(subNo),'all.mat'); % name of another data file to write to (in .mat format)
+        mSave        = strcat('data/retrievalTask_',num2str(subNo),'_', num2str(block)','.mat'); % name of another data file to write to (in .mat format)
+        mSaveALL     = strcat('data/retrievalTask_',num2str(subNo),'_', num2str(block)','all.mat'); % name of another data file to write to (in .mat format)
     end
     nTrial     = length(fileNames);
     numObject   = nTrial/21;
