@@ -4,10 +4,6 @@ function [] = ratingStudy()
 % Author: Alexander Quent (alex.quent at mrc-cbu.cam.ac.uk)
 % Version: 1.0
 % % % % % % % % % % % % % % % % % % % % % % % % %
-% To do:
-% - pause function via escape
-% - percentage display
-% - write to log file
 
 %% Explanations
 
@@ -34,8 +30,8 @@ try
         error('You are already finished with the task. Please send me results.')
     else
         logPointer   = fopen('log.txt', 'w');
-        mSave        = strcat('data/ratingStudy',num2str(subNo),'.mat'); % name of another data file to write to (in .mat format)
-        mSaveALL     = strcat('data/ratingStudy',num2str(subNo),'all.mat'); % name of another data file to write to (in .mat format)
+        mSave        = strcat('data/ratingStudy_',num2str(subNo),'.mat'); % name of another data file to write to (in .mat format)
+        mSaveALL     = strcat('data/ratingStudy_',num2str(subNo),'all.mat'); % name of another data file to write to (in .mat format)
     end
     nTrial     = length(fileNames);
     numObject   = nTrial/21;
@@ -58,14 +54,13 @@ try
     
     % Output variables
     if currentTrial > 1
-        load(strcat('data/ratingStudy', num2str(subNo), '.mat'))
+        load(strcat('data/ratingStudy_', num2str(subNo), '.mat'))
     else
         objectRatings   = zeros(numObject, 1) -999;
         locationRatings = zeros(matrixDim(1), matrixDim(2)) - 999;
         objectRT        = zeros(numObject, 1) - 999;
         locationRT      = zeros(matrixDim(1), matrixDim(2)) - 999;
     end
-    
 
     % Get information about the screen and set general things
     Screen('Preference', 'SuppressAllWarnings',0);
@@ -85,7 +80,7 @@ try
     space  = KbName('space');
     escape = KbName('ESCAPE');
 
-    % Colors, sizes, instrurctions and times
+    % Colors, sizes, instrurctions
     bgColor       = [255 255 255];
     textSize      = [20 20];
     lineLength    = 70;
@@ -93,7 +88,6 @@ try
     messageIntro2 = WrapString('bla',lineLength);
     messageIntro3 = WrapString('Please press escape if you are ready to start.', lineLength);
     endPoints     = {'unexpected', 'expected'};
-    ISI           = 0.2;
 
     % Opening window and setting preferences
     try
@@ -121,7 +115,7 @@ try
     end
 
 %% Experimental loop
-    for trial = 1:nTrial
+    for trial = currentTrial:nTrial
         % Exercise and instruction
         if trial == 1
             Screen('TextSize', myScreen, textSize(1)); % Sets size to instruction size
@@ -148,7 +142,7 @@ try
             Screen('Flip', myScreen);
             KbReleaseWait;
             [~, ~, keyCode] = KbCheck; 
-              while keyCode(escape) == 0 
+            while keyCode(escape) == 0 
                 [~, ~, keyCode] = KbCheck;
             end
             
@@ -165,25 +159,41 @@ try
             locationRT(index1(trial), index2(trial))      = RT;
         end
         
-        % Blank ISI
-        onsetISI = Screen('Flip', myScreen);
-        Screen('Flip', myScreen, onsetISI + ISI - slack)
-        
         % Update files
         logPointer   = fopen('log.txt', 'w');
-        fprintf(logPointer,'%d %d %d', subNo, trial, finished);
-        dlmwrite('objectRatings.dat', objectRatings, '\t');
+        fprintf(logPointer,'\r%4d %4d %4d', subNo, trial, finished);
+        dlmwrite(strcat('data/objectRatings_' , num2str(subNo),'.dat'), objectRatings, 'delimiter', '\t', 'precision', 6);
+        dlmwrite(strcat('data/locationRatings_' , num2str(subNo),'.dat'), locationRatings, 'delimiter', '\t', 'precision', 6);
+        dlmwrite(strcat('data/objectRT_' , num2str(subNo),'.dat'), objectRT, 'delimiter', '\t', 'precision', 6);
+        dlmwrite(strcat('data/locationRT_' , num2str(subNo),'.dat'), locationRT, 'delimiter', '\t', 'precision', 6);
         
+        % Escape or continue
+        DrawFormattedText(myScreen, strcat('Press space to continue or esacpe to pause experiment. \n Progress: ', num2str(round(trial/nTrial, 2)*100), ' %'), 'center', 'center');
+        Screen('Flip', myScreen);
+        KbReleaseWait;
+        [~, ~, keyCode] = KbCheck; 
+        while keyCode(escape) == 0 && keyCode(space) == 0
+            [~, ~, keyCode] = KbCheck;
+        end
+        if keyCode(escape) == 1
+            break
+        end
         
-    end
+    end          
        
     %% End of experiment
-    finished = 1;
+    if trial == nTrial
+        finished = 1;
+    end
+    logPointer   = fopen('log.txt', 'w');
+    fprintf(logPointer,'\r%4d %4d %4d', subNo, trial, finished);
     fclose('all');
+    save(mSave, 'objectRatings', 'objectRT','locationRatings','locationRT');
+    save(mSaveALL);
     
     Screen('TextSize', myScreen, textSize(1)); % Sets size to instruction size
     DrawFormattedText(myScreen, horzcat('End of experiment. Thank you for your participation. \n Please press escape to leave.'), 'center', 'center');
-    Screen('Flip', myScreen);
+    Screen('Flip', myScreen); 
     [~, ~, keyCode] = KbCheck; 
     while keyCode(escape) == 0 
         [~, ~, keyCode] = KbCheck;
@@ -191,6 +201,7 @@ try
 
     Screen('CloseAll')
 catch
+    fclose('all');
     rethrow(lasterror)
     Screen('CloseAll')
 end
