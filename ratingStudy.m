@@ -33,7 +33,7 @@ try
     if finished == 1
         error('You are already finished with the task. Please send me results.')
     else
-        fopen('log.txt', 'wt');
+        logPointer   = fopen('log.txt', 'w');
         mSave        = strcat('data/ratingStudy',num2str(subNo),'.mat'); % name of another data file to write to (in .mat format)
         mSaveALL     = strcat('data/ratingStudy',num2str(subNo),'all.mat'); % name of another data file to write to (in .mat format)
     end
@@ -148,7 +148,7 @@ try
             Screen('Flip', myScreen);
             KbReleaseWait;
             [~, ~, keyCode] = KbCheck; 
-            while keyCode(escape) == 0 
+              while keyCode(escape) == 0 
                 [~, ~, keyCode] = KbCheck;
             end
             
@@ -169,12 +169,17 @@ try
         onsetISI = Screen('Flip', myScreen);
         Screen('Flip', myScreen, onsetISI + ISI - slack)
         
+        % Update files
+        logPointer   = fopen('log.txt', 'w');
+        fprintf(logPointer,'%d %d %d', subNo, trial, finished);
+        dlmwrite('objectRatings.dat', objectRatings, '\t');
         
         
     end
        
     %% End of experiment
     finished = 1;
+    fclose('all');
     
     Screen('TextSize', myScreen, textSize(1)); % Sets size to instruction size
     DrawFormattedText(myScreen, horzcat('End of experiment. Thank you for your participation. \n Please press escape to leave.'), 'center', 'center');
