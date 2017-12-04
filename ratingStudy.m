@@ -111,7 +111,7 @@ try
 
     % Loading stimuli
     for i = 1:length(fileNames)
-        images{i}  = imread(strcat('stimuli/', fileNames{i}, '.jpg'));
+        images{i}  = imresize(imread(strcat('stimuli/', fileNames{i}, '.png')), 0.5);
     end
 
 %% Experimental loop
