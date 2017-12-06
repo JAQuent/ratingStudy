@@ -1,4 +1,4 @@
-function [] = ratingStudy()
+function [] = ratingStudy(subNo)
 % % % % % % % % % % % % % % % % % % % % % % % % % 
 % Rating study
 % Author: Alexander Quent (alex.quent at mrc-cbu.cam.ac.uk)
@@ -22,16 +22,17 @@ try
     % General information about subject and session
     date  = str2double(datestr(now,'yyyymmdd'));
     time  = str2double(datestr(now,'HHMMSS'));
+    subNo = num2str(subNo);
     
     % Input variables
-    [ratingType, fileNames, questions] = textread(strcat('stimuli/questions.txt'),'%10s %20s %100s', 'delimiter','\t');
-    [subNo, currentTrial, finished] = textread('log.txt','%n %n %n', 'delimiter','\t');
+    [ratingType, fileNames, questions] = textread(strcat('stimuli/questions', subNo, '.txt'),'%10s %20s %100s', 'delimiter','\t');
+    [currentTrial, finished] = textread(strcat('log', subNo, '.txt'),'%n %n', 'delimiter','\t');
     if finished == 1
         error('You are already finished with the task. Please send me results.')
     else
         logPointer   = fopen('log.txt', 'w');
-        mSave        = strcat('data/ratingStudy_',num2str(subNo),'.mat'); % name of another data file to write to (in .mat format)
-        mSaveALL     = strcat('data/ratingStudy_',num2str(subNo),'all.mat'); % name of another data file to write to (in .mat format)
+        mSave        = strcat('data/ratingStudy_', subNo,'.mat'); % name of another data file to write to (in .mat format)
+        mSaveALL     = strcat('data/ratingStudy_', subNo,'all.mat'); % name of another data file to write to (in .mat format)
     end
     nTrial     = length(fileNames);
     numObject   = nTrial/21;
