@@ -18,7 +18,7 @@ try
 
     % Reseed randomization
     rand('state', sum(100*clock));
-
+ 
     % General information about subject and session
     date  = str2double(datestr(now,'yyyymmdd'));
     time  = str2double(datestr(now,'HHMMSS'));
@@ -30,7 +30,7 @@ try
     if finished == 1
         error('You are already finished with the task. Please send me results.')
     else
-        logPointer   = fopen('log.txt', 'w');
+        logPointer   = fopen(strcat('log', subNo, '.txt'), 'w');
         mSave        = strcat('data/ratingStudy_', subNo,'.mat'); % name of another data file to write to (in .mat format)
         mSaveALL     = strcat('data/ratingStudy_', subNo,'all.mat'); % name of another data file to write to (in .mat format)
     end
@@ -112,7 +112,11 @@ try
 
     % Loading stimuli
     for i = 1:length(fileNames)
-        images{i}  = imresize(imread(strcat('stimuli/', fileNames{i}, '.png')), 0.5);
+        if length(fileNames{i}) < 7
+            images{i}  = imresize(imread(strcat('stimuli/', fileNames{i}, '.png')),0.6987);
+        else
+            images{i}  = imresize(imread(strcat('stimuli/', fileNames{i}, '.png')), 0.5);
+        end
     end
 
 %% Experimental loop
@@ -151,7 +155,7 @@ try
             Screen('TextSize', myScreen, textSize(2)); % Sets size to normal
         end
         %% Trial
-        [position, RT] = slideScale(myScreen, questions{trial}, rect, endPoints, 'device', 'mouse', 'image', images{trial},'scalaposition', 0.9, 'startposition', 'center', 'displayposition', true);
+        [position, RT] = slideScale(myScreen, questions{trial}, rect, endPoints, 'device', 'keyboard', 'image', images{trial},'scalaposition', 0.9, 'startposition', 'center', 'displayposition', true, 'aborttime', 20);
         if strcmp(ratingType{trial}, 'object')
             objectRatings(index1(trial), index2(trial))   = position;
             objectRT(index1(trial), index2(trial))        = RT;
@@ -161,8 +165,8 @@ try
         end
         
         % Update files
-        logPointer   = fopen('log.txt', 'w');
-        fprintf(logPointer,'\r%4d %4d %4d', subNo, trial, finished);
+        logPointer   = fopen(strcat('log', subNo, '.txt'), 'w');
+        fprintf(logPointer,'\r%4d %4d', trial, finished);
         dlmwrite(strcat('data/objectRatings_' , num2str(subNo),'.dat'), objectRatings, 'delimiter', '\t', 'precision', 6);
         dlmwrite(strcat('data/locationRatings_' , num2str(subNo),'.dat'), locationRatings, 'delimiter', '\t', 'precision', 6);
         dlmwrite(strcat('data/objectRT_' , num2str(subNo),'.dat'), objectRT, 'delimiter', '\t', 'precision', 6);
@@ -185,23 +189,33 @@ try
     %% End of experiment
     if trial == nTrial
         finished = 1;
+        Screen('TextSize', myScreen, textSize(1)); % Sets size to instruction size
+        DrawFormattedText(myScreen, horzcat('End of experiment. Thank you for your participation. \n Please press escape to leave.'), 'center', 'center');
+        Screen('Flip', myScreen); 
+        [~, ~, keyCode] = KbCheck; 
+        while keyCode(escape) == 0 
+            [~, ~, keyCode] = KbCheck;
+        end
+    else
+        Screen('TextSize', myScreen, textSize(1)); % Sets size to instruction size
+        DrawFormattedText(myScreen, horzcat('The experiment has been paused. You can continue later. \n Please press escape to leave.'), 'center', 'center');
+        Screen('Flip', myScreen); 
+        [~, ~, keyCode] = KbCheck; 
+        while keyCode(escape) == 0 
+            [~, ~, keyCode] = KbCheck;
+        end
     end
-    logPointer   = fopen('log.txt', 'w');
-    fprintf(logPointer,'\r%4d %4d %4d', subNo, trial, finished);
+    logPointer   = fopen(strcat('log', subNo, '.txt'), 'w');
+    fprintf(logPointer,'\r%4d %4d', trial, finished);
     fclose('all');
     save(mSave, 'objectRatings', 'objectRT','locationRatings','locationRT');
     save(mSaveALL);
     
-    Screen('TextSize', myScreen, textSize(1)); % Sets size to instruction size
-    DrawFormattedText(myScreen, horzcat('End of experiment. Thank you for your participation. \n Please press escape to leave.'), 'center', 'center');
-    Screen('Flip', myScreen); 
-    [~, ~, keyCode] = KbCheck; 
-    while keyCode(escape) == 0 
-        [~, ~, keyCode] = KbCheck;
-    end
 
     Screen('CloseAll')
 catch
+    logPointer   = fopen(strcat('log', subNo, '.txt'), 'w');
+    fprintf(logPointer,'\r%4d %4d', trial, finished);
     fclose('all');
     rethrow(lasterror)
     Screen('CloseAll')
