@@ -84,10 +84,8 @@ try
     % Colors, sizes, instrurctions
     bgColor       = [255 255 255];
     textSize      = [20 20];
-    lineLength    = 70;
-    messageIntro1 = WrapString('Instructions \n\n bla',lineLength);
-    messageIntro2 = WrapString('bla',lineLength);
-    messageIntro3 = WrapString('Please press escape if you are ready to start.', lineLength);
+    lineLength    = 60;
+    messageIntro1 = WrapString('Rating study \n\n Your task is to rate the expectancy of twenty objects in a kitchen and to rate the expectancy of certain locations within a particular kitchen for each object. The scale ranges from unexpected (-100) to expected (100). Move your mouse to move the slider across the scale. You have to rate 420 objects/locations. You are able to pause the experiment after each trial, so you don’t have to do that in one go. After completion, just send me your results. Thank you so much for your help. Press spacebar to start the experiment.',lineLength);
     endPoints     = {'unexpected', 'expected'};
 
     % Opening window and setting preferences
@@ -133,27 +131,9 @@ try
                 [~, ~, keyCode] = KbCheck;
             end
 
-            % Page 2
-            DrawFormattedText(myScreen, messageIntro2, 'center', 'center');
-            Screen('Flip', myScreen);
-            KbReleaseWait;
-            [~, ~, keyCode] = KbCheck; 
-            while keyCode(space) == 0 
-                [~, ~, keyCode] = KbCheck;
-            end
-
-            % Page 3
-            DrawFormattedText(myScreen, messageIntro3, 'center', 'center');
-            Screen('Flip', myScreen);
-            KbReleaseWait;
-            [~, ~, keyCode] = KbCheck; 
-            while keyCode(escape) == 0 
-                [~, ~, keyCode] = KbCheck;
-            end
-            
             % Specifiying font settings for experimental trials
             Screen('TextSize', myScreen, textSize(2)); % Sets size to normal
-        end
+        end 
         %% Trial
         [position, RT] = slideScale(myScreen, questions{trial}, rect, endPoints, 'device', 'keyboard', 'image', images{trial},'scalaposition', 0.9, 'startposition', 'center', 'displayposition', true, 'aborttime', 20);
         if strcmp(ratingType{trial}, 'object')
