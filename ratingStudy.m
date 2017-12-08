@@ -185,6 +185,7 @@ try
             [~, ~, keyCode] = KbCheck;
         end
     end
+    clearvars images
     logPointer   = fopen(strcat('log', subNo, '.txt'), 'w');
     fprintf(logPointer,'\r%4d %4d', trial, finished);
     fclose('all');
@@ -194,6 +195,7 @@ try
 
     Screen('CloseAll')
 catch
+    clearvars images
     logPointer   = fopen(strcat('log', subNo, '.txt'), 'w');
     fprintf(logPointer,'\r%4d %4d', trial, finished);
     fclose('all');
