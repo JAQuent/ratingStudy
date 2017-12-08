@@ -6,7 +6,7 @@ function [] = ratingStudy(subNo)
 % % % % % % % % % % % % % % % % % % % % % % % % %
 
 %% Explanations
-
+% To run just call function with the respective subject number. 
 try
 %% Setting everuthing up
     % Preliminary stuff
@@ -135,7 +135,7 @@ try
             Screen('TextSize', myScreen, textSize(2)); % Sets size to normal
         end 
         %% Trial
-        [position, RT] = slideScale(myScreen, questions{trial}, rect, endPoints, 'device', 'keyboard', 'image', images{trial},'scalaposition', 0.9, 'startposition', 'center', 'displayposition', true, 'aborttime', 20);
+        [position, RT] = slideScale(myScreen, questions{trial}, rect, endPoints, 'device', 'mouse', 'image', images{trial},'scalaposition', 0.9, 'startposition', 'center', 'displayposition', true, 'aborttime', 200);
         if strcmp(ratingType{trial}, 'object')
             objectRatings(index1(trial), index2(trial))   = position;
             objectRT(index1(trial), index2(trial))        = RT;
