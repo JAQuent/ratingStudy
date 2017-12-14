@@ -5,6 +5,7 @@ function [] = ratingStudy(subNo)
 % Version: 1.1
 % % % % % % % % % % % % % % % % % % % % % % % % %
 
+
 %% Explanations
 % To run just call function with the respective subject number. 
 try
