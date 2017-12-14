@@ -250,7 +250,7 @@ while answer == 0
 end
 %% Wating that all keys are released and delete texture
 KbReleaseWait; %Keyboard
-%KbReleaseWait(1); %Mouse
+KbReleaseWait(1); %Mouse
 if drawImage == 1
     Screen('Close', stimuli);
 end
