@@ -50,8 +50,8 @@ try
             index2(i) = 1;
         else
             splitStr = strsplit(fileNames{i}, '_');
-            index1(i) = str2double(splitStr{1});
-            index2(i) = str2double(splitStr{2});
+            index1(i) = str2double(splitStr{1}); % Object
+            index2(i) = str2double(splitStr{2}); % Location
         end
     end
     
@@ -87,7 +87,7 @@ try
     bgColor       = [255 255 255];
     textSize      = [20 20];
     lineLength    = 60;
-    messageIntro1 = WrapString('Rating study \n\n First, your task is to rate the expectancy of specific objects at specific locations in a kitchen. An generally unexpected object may be more or less expected depending on the location. The scale ranges from unexpected (-100) to expected (100). Move your mouse to move the slider across the scale. You have to rate 400 objects/locations. After completing those, you will be asked again to rate the general expectancy of the objects in a kitchen. \n\n You are able to pause the experiment after each trial, so you don’t have to do that in one go. After completion, just send me your results. Thank you so much for your help. To calibriate your object/location ratings, you will start with eight practice trials with representative objects and locations. Press spacebar to start the practice run.',lineLength);
+    messageIntro1 = WrapString('Rating study \n\n First, your task is to rate the expectancy of specific objects at specific locations in a kitchen. A generally unexpected object may be more or less expected depending on the location. The scale ranges from unexpected (-100) to expected (100). Move your mouse to move the slider across the scale. You have to rate 400 objects/locations. After completing those, you will be asked again to rate the general expectancy of the objects in a kitchen. \n\n You are able to pause the experiment after each trial, so you don’t have to do that in one go. After completion, just send me your results. Thank you so much for your help. To calibriate your object/location ratings, you will start with eight practice trials with representative objects and locations. Press spacebar to start the practice run.',lineLength);
     messageIntro2 = WrapString('End of practice \n\n Press spacebar to start the experiment.',lineLength);
     messageIntro3 = WrapString('Object ratings \n\n Press spacebar to continue.',lineLength);
     endPoints     = {'unexpected', 'expected'};
