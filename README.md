@@ -26,7 +26,7 @@ Guide through this repository
 List of notebook entries
 ========================
 
--   [Analysing normative data set](https://jaquent.github.io/2018/01/analysing-normative-data-set/)
+-   [Analysing normative data set](https://jaquent.github.io/post/analysing-normative-data/)
 
 Disclaimer
 ==========
