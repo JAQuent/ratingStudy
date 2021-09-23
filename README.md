@@ -22,6 +22,7 @@ Guide through this repository
 -   The folder *normativeData* contains RT and Ratings for object/location expectancy and general expectancy. The data is organised in matrices (one row for each object and one column for each location).
 -   The folder *stimuli* contains the images and questions used to collect the data.
 -   The experiment itself is a MATLAB/Psychtoolbox 3 script (*ratingStudy.m*), which uses my slide scale function (*slideScale.m*).
+-   The folder post contains a short analysis of the data. 
 
 List of notebook entries
 ========================
