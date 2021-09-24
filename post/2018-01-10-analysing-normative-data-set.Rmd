@@ -148,4 +148,4 @@ correlation <- cor.test(~ Overall + Location, data = correlationDF)
 ggplot(correlationDF, aes(x = Location, y = Overall)) + geom_point() + geom_smooth(method = 'lm') + coord_cartesian(xlim = c(-25, 35), ylim = c(-75, 150), expand = FALSE) + labs(title = 'Average rating across locations vs. overall ratings') + annotate("text", x = 20, y = -50, label = paste('r ', rValue(correlation$estimate), ', p ' , pValue(correlation$p.value), sep = '') , size = 5)
 ```
 
-As it turns out, there is a significant positive correlation between the average ratings across locations and the overall ratingsr, *r* `r rValue(correlation$estimate)`, *p* `r pValue(correlation$p.value)`. 
+As it turns out, there is a significant positive correlation between the average ratings across locations and the overall ratings, *r* `r rValue(correlation$estimate)`, *p* `r pValue(correlation$p.value)`. 
