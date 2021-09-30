@@ -23,6 +23,7 @@ Guide through this repository
 -   The folder *stimuli* contains the images and questions used to collect the data.
 -   The experiment itself is a MATLAB/Psychtoolbox 3 script (*ratingStudy.m*), which uses my slide scale function (*slideScale.m*).
 -   The folder post contains a short analysis of the data. 
+-   A data frame can be found in these files (*ratingStudy_data.RData* & *ratingStudy_data.txt*). These were created with *create_data_for_sharing.R*.
 
 List of notebook entries
 ========================
